@@ -133,12 +133,15 @@
                 <i class="fas fa-check"></i>
             </div>
             <h3 class="text-lg font-bold text-gray-900">تم إرسال البيانات بنجاح</h3>
-            <p class="text-xs text-gray-600">تم حفظ بيانات الممرض وصور المستندات للأغراض الإدارية التنظيمية.</p>
+            <p class="text-xs text-gray-600">تم حفظ أو تحديث بيانات الممرض في جدول البيانات بالاعتماد على رقم البطاقة الموحدة.</p>
             <button onclick="closeModal()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-700 transition">إغلاق وتحديث الاستمارة</button>
         </div>
     </div>
 
     <script>
+        // رابط السكربت المرتبط بشيت جوجل الخاص بك
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwYGheEQgkZPxWkAGT4chhXnR4Rbr86tun_BwoNTckkxqUTCElmuBk4-KMhaa_DCRyPLQ/exec";
+
         // تفعيل فتح الكاميرا عند النقر على الزر
         function triggerCamera(type) {
             const input = document.getElementById(type + 'ImageInput');
@@ -160,22 +163,51 @@
             }
         }
 
-        // التعامل مع إرسال النموذج
-        document.getElementById('nurseForm').addEventListener('submit', function(e) {
+        // التعامل مع إرسال النموذج والربط بالسكربت
+        document.getElementById('nurseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // التحقق من إرفاق الصور
-            const frontImg = document.getElementById('frontImageInput').files[0];
-            const backImg = document.getElementById('backImageInput').files[0];
+            const frontImgInput = document.getElementById('frontImageInput').files[0];
+            const backImgInput = document.getElementById('backImageInput').files[0];
 
-            if (!frontImg || !backImg) {
+            if (!frontImgInput || !backImgInput) {
                 alert('يرجى التقاط أو رفع صورة البطاقة الموحدة (الوجه الأمامي والخلفي) قبل الإرسال.');
                 return;
             }
 
-            // إظهار نافذة النجاح
-            document.getElementById('successModal').classList.remove('hidden');
-            document.getElementById('successModal').classList.add('flex');
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                motherName: document.getElementById('motherName').value,
+                gender: document.getElementById('gender').value,
+                dob: document.getElementById('dob').value,
+                jobTitle: document.getElementById('jobTitle').value,
+                idNumber: document.getElementById('idNumber').value,
+                frontImage: "تم الرفع",
+                backImage: "تم الرفع"
+            };
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin ml-2"></i> جاري إرسال البيانات...';
+            submitBtn.disabled = true;
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                // إظهار نافذة النجاح
+                document.getElementById('successModal').classList.remove('hidden');
+                document.getElementById('successModal').classList.add('flex');
+            } catch (error) {
+                alert('حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة مرة أخرى.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
         // إغلاق النافذة المنبثقة
