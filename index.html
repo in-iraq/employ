@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة بيانات الممرضين - القراءة الحقيقية للبطاقة</title>
+    <title>استمارة بيانات الممرضين - قراءة البطاقة الوطنية العراقية</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v5/dist/tesseract.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -37,14 +37,14 @@
         
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-slate-800">استمارة جمع بيانات الممرضين</h1>
-            <p class="text-sm text-slate-500 mt-1">التعرف الذكي وقراءة البيانات الحقيقية من البطاقة الوطنية</p>
+            <p class="text-sm text-slate-500 mt-1">التعرف الذكي وقراءة حقول البطاقة الوطنية الموحدة</p>
         </div>
 
         <form id="nurseForm" class="space-y-5">
             
             <!-- إطار الكاميرا الحية والذكاء الاصطناعي -->
             <div>
-                <label class="block text-sm font-bold text-sky-700 mb-2 text-center">اجعل البطاقة الموحدة داخل الإطار واضغط على زر القراءة</label>
+                <label class="block text-sm font-bold text-sky-700 mb-2 text-center">اجعل البطاقة الوطنية الموحدة داخل الإطار تماماً</label>
                 
                 <div class="id-card-frame">
                     <video id="cameraStream" autoplay playsinline muted></video>
@@ -62,22 +62,22 @@
                         تشغيل الكاميرا
                     </button>
                     <button type="button" onclick="captureAndScan()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow">
-                        قراءة النصوص الحقيقية 🔍
+                        مسح وقراءة البطاقة 🔍
                     </button>
                 </div>
             </div>
 
-            <!-- الاسم الرباعي -->
+            <!-- الاسم الرباعي (الاسم + الأب + الجد + اللقب) -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">الاسم الرباعي واللقب (المستخرج)</label>
-                <input type="text" id="fullName" required placeholder="سيظهر الاسم المستخرج من البطاقة هنا" 
+                <label class="block text-sm font-semibold text-slate-700 mb-1">الاسم الرباعي واللقب (حسب البطاقة)</label>
+                <input type="text" id="fullName" required placeholder="يُستخرج تلقائياً (الاسم / الأب / الجد / اللقب)" 
                     class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none text-slate-700 text-sm bg-slate-50">
             </div>
 
-            <!-- اسم الام الثلاثي -->
+            <!-- اسم الام الثلاثي (اسم الأم / أب الأم / جد الأم) -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">اسم الأم الثلاثي (المستخرج)</label>
-                <input type="text" id="motherName" required placeholder="سيظهر اسم الأم المستخرج هنا" 
+                <label class="block text-sm font-semibold text-slate-700 mb-1">اسم الأم الثلاثي (حسب البطاقة)</label>
+                <input type="text" id="motherName" required placeholder="يُستخرج تلقائياً (الأم / أب الأم / جد الأم)" 
                     class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none text-slate-700 text-sm bg-slate-50">
             </div>
 
@@ -107,8 +107,8 @@
 
             <!-- رقم البطاقة الموحدة -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">رقم البطاقة الموحدة (المستخرج)</label>
-                <input type="text" id="cardIdNumber" required placeholder="سيظهر رقم البطاقة هنا" 
+                <label class="block text-sm font-semibold text-slate-700 mb-1">رقم البطاقة الموحدة</label>
+                <input type="text" id="cardIdNumber" required placeholder="رقم البطاقة التسلسلي" 
                     class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none text-slate-700 text-sm bg-slate-50">
             </div>
 
@@ -133,9 +133,9 @@
                 });
                 
                 videoElement.srcObject = videoStream;
-                document.getElementById('scannerStatus').innerText = "الكاميرا تعمل - وجه البطاقة الموحدة بدقة";
+                document.getElementById('scannerStatus').innerText = "الكاميرا تعمل - جاهز لمسح البطاقة الموحدة";
             } catch (error) {
-                alert("تعذر تشغيل الكاميرا، يجدر التأكد من أذونات المتصفح.");
+                alert("تعذر تشغيل الكاميرا، يرجى السماح للمتصفح بالوصول للكاميرا.");
             }
         }
 
@@ -149,7 +149,7 @@
                 return;
             }
 
-            status.innerText = "جاري قراءة النصوص الحقيقية من البطاقة...";
+            status.innerText = "جاري قراءة حقول البطاقة الموحدة...";
             status.className = "absolute top-2 bg-amber-600 text-white text-[11px] px-3 py-1 rounded-full font-bold animate-pulse";
 
             canvas.width = video.videoWidth || 640;
@@ -160,7 +160,6 @@
             const imageDataUrl = canvas.toDataURL('image/png');
 
             try {
-                // استخراج النصوص الحقيقية عبر Tesseract OCR باللغة العربية والإنجليزية
                 const result = await Tesseract.recognize(
                     imageDataUrl,
                     'ara+eng',
@@ -168,49 +167,72 @@
                 );
 
                 const text = result.data.text;
-                console.log("النص الخام المستخرج:", text);
+                console.log("النص المستخرج:", text);
 
-                // التحقق من أن البطاقة هي البطاقة الوطنية العراقية الفعلية (وليس بطاقة أخرى أو ورقة عادية)
-                const isIraqiID = text.includes("وزارة الداخلية") || text.includes("الجمهورية") || text.includes("البطاقة") || text.includes("الأحوال");
+                // التحقق الصارم من أن البطاقة هي البطاقة الوطنية العراقية الرسمية
+                const isIraqiID = text.includes("وزارة الداخلية") || text.includes("الجمهورية") || text.includes("البطاقة الوطنية") || text.includes("الأحوال المدنية");
 
                 if (!isIraqiID) {
-                    status.innerText = "✗ عذراً، البطاقة غير مطابقة للنموذج العراقي الرسمي";
+                    status.innerText = "✗ بطاقة غير مطابقة للنموذج العراقي الرسمي";
                     status.className = "absolute top-2 bg-rose-600 text-white text-[11px] px-3 py-1 rounded-full font-bold";
-                    alert("لم يتم التعرف على معالم البطاقة الوطنية الموحدة النموذجية. يرجى التأكد من توجيه البطاقة الصحيحة داخل الإطار.");
+                    alert("عذراً، هذه ليست البطاقة الوطنية الموحدة المطلوبة. يرجى توجيه البطاقة النموذجية الصحيحة.");
                     return;
                 }
 
-                status.innerText = "✓ تم التحقق وقراءة النصوص الحقيقية بنجاح!";
+                status.innerText = "✓ تمت قراءة البطاقة الوطنية الموحدة بنجاح!";
                 status.className = "absolute top-2 bg-emerald-600 text-white text-[11px] px-3 py-1 rounded-full font-bold";
 
-                // استخراج الأرقام (مثل رقم البطاقة الموحدة) من النص الفعلي
-                const numbersMatch = text.match(/\d{6,}/g);
+                // استخراج رقم البطاقة (الأرقام المتسلسلة)
+                const numbersMatch = text.match(/\d{5,}/g);
                 if (numbersMatch && numbersMatch.length > 0) {
-                    document.getElementById('cardIdNumber').value = numbersMatch[0];
+                    document.getElementById('cardIdNumber').value = numbersMatch[numbersMatch.length - 1];
                 }
 
-                // محاولة استخراج أو تنظيف النصوص للأسماء (تقسيم الأسطر وإيجاد الكلمات الدالة)
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+                // الكشف التلقائي عن الجنس من النص
+                if (text.includes("ذكر") || text.includes("مذكر")) {
+                    document.getElementById('gender').value = "ذكر";
+                } else if (text.includes("أنثى") || text.includes("مونث")) {
+                    document.getElementById('gender').value = "أنثى";
+                }
+
+                // استخراج الأسطر لتعبئة الاسم الرباعي واسم الأم الثلاثي بدقة حسب الحقول المقابلة
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
                 
-                let detectedName = "";
-                let detectedMother = "";
+                let extractedNameParts = [];
+                let extractedMotherParts = [];
+                let captureMode = '';
 
-                for (let i = 0; i < lines.length; i++) {
-                    let line = lines[i];
-                    if (line.includes("الاسم") || line.includes("اسم")) {
-                        if (i + 1 < lines.length) detectedName = lines[i + 1];
+                for (let line of lines) {
+                    if (line.includes("الاسم") || line.includes("الأب") || line.includes("الجد") || line.includes("اللقب")) {
+                        captureMode = 'name';
+                        continue;
+                    } else if (line.includes("الأم") || line.includes("دابيك") || line.includes("دايك")) {
+                        captureMode = 'mother';
+                        continue;
                     }
-                    if (line.includes("الأم") || line.includes("الام")) {
-                        if (i + 1 < lines.length) detectedMother = lines[i + 1];
+
+                    if (captureMode === 'name' && extractedNameParts.length < 4) {
+                        extractedNameParts.push(line);
+                    } else if (captureMode === 'mother' && extractedMotherParts.length < 3) {
+                        extractedMotherParts.push(line);
                     }
                 }
 
-                // إذا لم يتم العثور على الأسطر بدقة تلقائية مطلقة من الصورة، نضع النص المستخرج الفعلي كبديل ليتسنى للمستخدم تعديله
-                document.getElementById('fullName').value = detectedName || (lines[0] ? lines[0] : "يرجى تعديل الاسم يمتنع الخطأ");
-                document.getElementById('motherName').value = detectedMother || (lines[1] ? lines[1] : "يرجى تعديل اسم الأم");
+                // تعبئة الحقول بالأسماء المستخرجة الفعلية أو النصوص المتوفرة
+                if (extractedNameParts.length > 0) {
+                    document.getElementById('fullName').value = extractedNameParts.join(' ');
+                } else {
+                    document.getElementById('fullName').value = lines.slice(0, 4).join(' ');
+                }
+
+                if (extractedMotherParts.length > 0) {
+                    document.getElementById('motherName').value = extractedMotherParts.join(' ');
+                } else {
+                    document.getElementById('motherName').value = lines.slice(4, 7).join(' ');
+                }
 
             } catch (err) {
-                status.innerText = "فشل في عملية القراءة، حاول مرة أخرى";
+                status.innerText = "فشل في عملية القراءة، أعد المحاولة";
                 status.className = "absolute top-2 bg-rose-600 text-white text-[11px] px-3 py-1 rounded-full font-bold";
             }
         }
@@ -221,7 +243,7 @@
 
         document.getElementById('nurseForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('تم إرسال البيانات والتحقق من البطاقة الموحدة بنجاح!');
+            alert('تم تأكيد بيانات الممرض وقراءة البطاقة الموحدة بنجاح!');
         });
     </script>
 </body>
