@@ -2,228 +2,348 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER-TERMINAL // GLOBAL EXPLOIT FRAMEWORK V9.4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة إدارة بيانات التمريض - التسجيل الإلكتروني</title>
+    <!-- استدعاء Tailwind CSS للتصميم العصري -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- استدعاء الخط العربي Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- استدعاء FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        
         body {
-            font-family: 'Share TechMono', monospace;
-            background-color: #030a03;
-            color: #00ff66;
-            overflow-x: hidden;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .glow-text {
-            text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3b82f6, transparent);
+            animation: scan 2s infinite ease-in-out;
         }
-
-        .glow-box {
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
-            border: 1px solid rgba(0, 255, 102, 0.3);
+        @keyframes scan {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.8; }
         }
-
-        .radar-grid {
-            background-image: linear-gradient(rgba(0, 255, 102, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 102, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        /* تأثير وميض المؤشر */
-        .blink::after {
-            content: '_';
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* سكرول بار مخصص */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #020502;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00ff6655;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00ff6699;
+        /* إطار البطاقة الموحدة التوجيهي */
+        .id-card-frame {
+            border: 2px dashed #94a3b8;
+            background-color: #f8fafc;
+            aspect-ratio: 1.58 / 1; /* نسبة أبعاد بطاقة الهوية القياسية */
         }
     </style>
 </head>
-<body class="radar-grid min-h-screen p-4 md:p-6">
+<body class="bg-slate-100 min-h-screen py-4 px-3 sm:py-8 sm:px-6">
 
-    <!-- رأس الصفحة / الهيدر -->
-    <header class="glow-box bg-black/80 rounded-lg p-4 mb-6 flex flex-col md:flex-row justify-between items-center backdrop-blur-md">
-        <div class="flex items-center space-x-3 space-x-reverse mb-3 md:mb-0">
-            <div class="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-            <h1 class="text-xl md:text-2xl font-bold tracking-wider glow-text">NET-SPECTRE // COMMAND & CONTROL</h1>
+    <div class="max-w-xl mx-auto">
+        <!-- رأس الصفحة والشعار -->
+        <div class="text-center mb-6 sm:mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-2xl shadow-lg mb-3">
+                <i class="fa-solid fa-user-nurse text-2xl"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">تسجيل بيانات الممرضين</h1>
+            <p class="mt-1 text-xs sm:text-sm text-slate-500 px-4">منصة إدارية متطورة متوافقة مع الهواتف الذكية مع نظام التحقق الذكي للبطاقة الوطنية العراقية الموحدة.</p>
         </div>
-        <div class="flex items-center space-x-6 space-x-reverse text-xs text-green-400/80">
-            <div>حالة الاتصال: <span class="text-green-400 font-bold">متصل [SECURE TUNNEL]</span></div>
-            <div>العقدة: <span class="text-green-400 font-bold">NODE-X9 // KSA-IQ</span></div>
-            <div id="live-clock" class="font-mono text-green-300">00:00:00</div>
-        </div>
-    </header>
 
-    <!-- المحتوى الرئيسي (شبكة اللوحات) -->
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- العمود الأول: استطلاع الأهداف والشبكات -->
-        <section class="space-y-6">
-            <!-- وحدة تحديد المواقع والرادار -->
-            <div class="glow-box bg-black/90 rounded-lg p-5">
-                <h2 class="text-sm font-bold tracking-widest text-green-300 mb-4 border-b border-green-500/30 pb-2">
-                    [+] رادار الأهداف الجغرافي (GPS TRACKER)
-                </h2>
-                <div class="relative h-48 bg-green-950/20 rounded border border-green-500/20 flex items-center justify-center overflow-hidden mb-4">
-                    <!-- خطوط الرادار التبادلية -->
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-32 h-32 rounded-full border border-green-500/20"></div>
-                        <div class="absolute w-20 h-20 rounded-full border border-green-500/30"></div>
-                        <div class="absolute w-8 h-8 rounded-full border border-green-500/50"></div>
-                        <div class="absolute w-full h-[1px] bg-green-500/20"></div>
-                        <div class="absolute h-full w-[1px] bg-green-500/20"></div>
-                    </div>
-                    <div class="absolute w-3 h-3 bg-green-400 rounded-full glow-text animate-pulse"></div>
-                    <span class="absolute bottom-2 left-2 text-[10px] text-green-400/70 font-mono">LAT: 33.3152° N | LNG: 44.3661° E</span>
-                </div>
-                <button onclick="triggerScan()" class="w-full bg-green-950/40 hover:bg-green-900/60 border border-green-500/50 text-green-300 py-2 rounded text-sm transition duration-200 glow-text">
-                    تشغيل ماسح الرادار الشامل
-                </button>
+        <!-- صندوق النموذج الرئيسي -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-5 py-3.5 text-white flex items-center justify-between">
+                <span class="font-bold text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-file-lines"></i> استمارة البيانات الأساسية
+                </span>
+                <span class="text-[11px] bg-blue-500/50 px-2.5 py-0.5 rounded-full border border-blue-400">حقول إجبارية *</span>
             </div>
 
-            <!-- وحدة اختراق الأجهزة وسحب الملفات -->
-            <div class="glow-box bg-black/90 rounded-lg p-5">
-                <h2 class="text-sm font-bold tracking-widest text-green-300 mb-4 border-b border-green-500/30 pb-2">
-                    [+] وحدة سحب الوسائط والكاميرا (EXPLOIT MODULE)
-                </h2>
-                <div class="space-y-3 text-xs">
-                    <div class="flex justify-between items-center bg-green-950/20 p-2 rounded border border-green-500/10">
-                        <span>سحب صور المعرض (Gallery Dump)</span>
-                        <span class="text-green-500 font-bold">[ جاهز ]</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-green-950/20 p-2 rounded border border-green-500/10">
-                        <span>التقاط بث الكاميرا الأمامية</span>
-                        <span class="text-green-500 font-bold">[ خامل ]</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-green-950/20 p-2 rounded border border-green-500/10">
-                        <span>قراءة جهات الاتصال والرسائل</span>
-                        <span class="text-green-500 font-bold">[ جاهز ]</span>
-                    </div>
-                </div>
-                <button onclick="executePayload()" class="mt-4 w-full bg-green-600 hover:bg-green-500 text-black font-bold py-2 rounded text-sm transition duration-200 shadow-lg">
-                    حقن الروابط وسحب البيانات
-                </button>
-            </div>
-        </section>
-
-        <!-- العمود الثاني والثالث: وحدة التحكم وسجلات النظام (Terminal Logs) -->
-        <section class="lg:col-span-2 space-y-6">
-            <div class="glow-box bg-black/95 rounded-lg p-5 flex flex-col h-[520px]">
-                <h2 class="text-sm font-bold tracking-widest text-green-300 mb-3 border-b border-green-500/30 pb-2 flex justify-between items-center">
-                    <span>[+] سجل العمليات الحية (LIVE EXPLOIT CONSOLE)</span>
-                    <span class="text-[10px] text-green-500/70">BUFFER: 1024KB</span>
-                </h2>
+            <form id="nurseForm" class="p-4 sm:p-8 space-y-6" onsubmit="handleSubmit(event)">
                 
-                <!-- شاشة السجلات السوداء -->
-                <div id="terminal-logs" class="flex-1 bg-black border border-green-500/30 rounded p-3 font-mono text-xs overflow-y-auto space-y-2 text-green-400">
-                    <div><span class="text-green-600">[00:00:01]</span> تهيئة بيئة التشغيل وتقنيات التشفير المتقدمة...</div>
-                    <div><span class="text-green-600">[00:00:03]</span> فحص المنافذ المفتوحة عبر بروتوكول TCP/UDP... تم بنجاح.</div>
-                    <div><span class="text-green-600">[00:00:05]</span> ربط الهيكلية مع وكلاء الشبكة العنقودية (Proxy Nodes)...</div>
-                    <div class="text-green-300"><span class="text-green-600">[00:00:08]</span> النظام جاهز لتلقي الأوامر واستهداف العقد المختارة.</div>
+                <!-- قسم رفع البطاقة الموحدة والتحقق الذكي -->
+                <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col gap-3 mb-4">
+                        <div>
+                            <h3 class="text-sm sm:text-base font-bold text-blue-900 flex items-center gap-2">
+                                <i class="fa-solid fa-id-card text-blue-600"></i> البطاقة الوطنية الموحدة العراقية (التحقق الذكي)
+                            </h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">النظام يفحص شعار الجمهورية والعلامات المميزة لرفض أي بطاقات مغايرة.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- الوجه الأمامي مع التحقق وتأطير البطاقة العراقية -->
+                        <div class="relative group id-card-frame rounded-xl p-3 text-center cursor-pointer flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition" onclick="document.getElementById('frontImage').click()">
+                            <input type="file" id="frontImage" accept="image/*" class="hidden" onchange="verifyAndProcessCard(event, 'front')">
+                            <div id="frontScanner" class="absolute inset-0 bg-blue-500/10 hidden pointer-events-none z-10">
+                                <div class="scanner-line"></div>
+                            </div>
+                            <div id="frontPlaceholder" class="space-y-1 z-0">
+                                <i class="fa-solid fa-address-card text-2xl text-slate-400"></i>
+                                <p class="text-xs font-bold text-slate-700">الوجه الأمامي (البطاقة الموحدة)</p>
+                                <span class="text-[10px] text-slate-400 block">انقر لرفع وجه البطاقة الرسمي</span>
+                            </div>
+                            <img id="frontPreview" class="hidden absolute inset-0 w-full h-full object-cover rounded-xl" alt="الوجه الأمامي">
+                            <!-- شارة التحقق -->
+                            <div id="frontBadge" class="absolute top-2 left-2 hidden z-20 bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full shadow flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> مطابقة رسمية
+                            </div>
+                        </div>
+
+                        <!-- الوجه الخلفي مع التحقق -->
+                        <div class="relative group id-card-frame rounded-xl p-3 text-center cursor-pointer flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition" onclick="document.getElementById('backImage').click()">
+                            <input type="file" id="backImage" accept="image/*" class="hidden" onchange="verifyAndProcessCard(event, 'back')">
+                            <div id="backScanner" class="absolute inset-0 bg-blue-500/10 hidden pointer-events-none z-10">
+                                <div class="scanner-line"></div>
+                            </div>
+                            <div id="backPlaceholder" class="space-y-1 z-0">
+                                <i class="fa-solid fa-id-badge text-2xl text-slate-400"></i>
+                                <p class="text-xs font-bold text-slate-700">الوجه الخلفي (البطاقة الموحدة)</p>
+                                <span class="text-[10px] text-slate-400 block">انقر لرفع ظهر البطاقة الرسمي</span>
+                            </div>
+                            <img id="backPreview" class="hidden absolute inset-0 w-full h-full object-cover rounded-xl" alt="الوجه الخلفي">
+                            <!-- شارة التحقق -->
+                            <div id="backBadge" class="absolute top-2 left-2 hidden z-20 bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full shadow flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> مطابقة رسمية
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- شريط إدخال الأوامر اليدوية -->
-                <div class="mt-3 flex gap-2">
-                    <span class="bg-green-950/50 border border-green-500/30 px-3 py-2 rounded text-green-400 text-xs flex items-center">root@spectre:~#</span>
-                    <input type="text" id="command-input" placeholder="اكتب أمراً هنا (مثال: help, scan, dump)..." class="flex-1 bg-black border border-green-500/30 rounded px-3 py-2 text-xs text-green-300 focus:outline-none focus:border-green-400 font-mono">
-                    <button onclick="runCommand()" class="bg-green-900/60 hover:bg-green-800 border border-green-500/50 text-green-200 px-4 py-2 rounded text-xs font-bold transition">تنفيذ</button>
+                <!-- شبكة الحقول الرئيسية -->
+                <div class="space-y-4">
+                    
+                    <!-- 1. الاسم الرباعي -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-700">1. الاسم الرباعي واللقب <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-user text-sm"></i></span>
+                            <input type="text" id="fullName" required placeholder="يتم تعبئته تلقائياً عند فحص البطاقة" class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- 2. اسم الأم الثلاثي -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-700">2. اسم الأم الثلاثي <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-female text-sm"></i></span>
+                            <input type="text" id="motherName" required placeholder="يتم تعبئته تلقائياً عند فحص البطاقة" class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- 3. الجنس -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700">3. الجنس <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-venus-mars text-sm"></i></span>
+                                <select id="gender" required class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                                    <option value="">اختر الجنس</option>
+                                    <option value="ذكر">ذكر</option>
+                                    <option value="أنثى">أنثى</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 4. تاريخ الميلاد -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700">4. تاريخ الميلاد <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-calendar-days text-sm"></i></span>
+                                <input type="date" id="birthDate" required class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- 5. العنوان الوظيفي -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700">5. العنوان الوظيفي <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-briefcase-medical text-sm"></i></span>
+                                <select id="jobTitle" required class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                                    <option value="">اختر العنوان الوظيفي</option>
+                                    <option value="ممرض جامعي">ممرض جامعي</option>
+                                    <option value="ممرض فني">ممرض فني</option>
+                                    <option value="ممرض مساعِد">ممرض مساعِد</option>
+                                    <option value="قابلة قانونية">قابلة قانونية</option>
+                                    <option value="رئيس تمريض">رئيس تمريض</option>
+                                    <option value="ممرض اختصاص">ممرض اختصاص</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 6. رقم البطاقة الموحدة -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700">6. رقم البطاقة الموحدة <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none"><i class="fa-solid fa-hashtag text-sm"></i></span>
+                                <input type="text" id="idNumber" required placeholder="رقم البطاقة الموحدة" class="w-full pr-10 pl-3.5 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-slate-800 text-xs sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+                <!-- زر التأكيد والإرسال -->
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
+                    <button type="reset" class="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-xs sm:text-sm order-2 sm:order-1">
+                        إعادة تفريغ الحقول
+                    </button>
+                    <button type="submit" class="w-full sm:flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-95 text-xs sm:text-sm flex items-center justify-center gap-2 order-1 sm:order-2">
+                        <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال البيانات
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة النجاح المنبثقة -->
+    <div id="successModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0 duration-300" id="modalContent">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-circle-check"></i>
             </div>
+            <h3 class="text-xl font-black text-slate-800 mb-1.5">تم إرسال البيانات بنجاح</h3>
+            <p class="text-slate-600 text-xs sm:text-sm mb-5 leading-relaxed">تم التحقق من البطاقة الوطنية الموحدة واستلام بيانات الممرض وحفظها في السجلات الإدارية بنجاح.</p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-xs sm:text-sm">
+                إغلاق النافذة
+            </button>
+        </div>
+    </div>
 
-            <!-- إحصائيات سريعة للثغرات والأجهزة المرتبطة -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="glow-box bg-black/90 p-4 rounded text-center">
-                    <div class="text-xs text-green-500/70">الأهداف النشطة</div>
-                    <div class="text-xl font-bold glow-text mt-1">14</div>
-                </div>
-                <div class="glow-box bg-black/90 p-4 rounded text-center">
-                    <div class="text-xs text-green-500/70">البيانات المسحوبة</div>
-                    <div class="text-xl font-bold glow-text mt-1">2.4 GB</div>
-                </div>
-                <div class="glow-box bg-black/90 p-4 rounded text-center">
-                    <div class="text-xs text-green-500/70">مستوى التشفير</div>
-                    <div class="text-xl font-bold glow-text mt-1">AES-256</div>
-                </div>
-                <div class="glow-box bg-black/90 p-4 rounded text-center">
-                    <div class="text-xs text-green-500/70">حالة الجدار الناري</div>
-                    <div class="text-xl font-bold text-red-500 mt-1">تم تجاوزه</div>
-                </div>
+    <!-- نافذة التنبيه المخصص (بديل الـ alert) -->
+    <div id="alertModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl">
+            <div id="alertIconBox" class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i id="alertIcon" class="fa-solid fa-triangle-exclamation"></i>
             </div>
-        </section>
-
-    </main>
+            <h3 id="alertTitle" class="text-xl font-black text-slate-800 mb-1.5">تنبيه التحقق</h3>
+            <p id="alertMessage" class="text-slate-600 text-xs sm:text-sm mb-5 leading-relaxed">عذراً، الصورة المرفوعة لا تتطابق مع مواصفات البطاقة الوطنية العراقية الموحدة الرسمية.</p>
+            <button onclick="closeCustomAlert()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-md transition text-xs sm:text-sm">
+                حسناً، إعادة المحاولة
+            </button>
+        </div>
+    </div>
 
     <script>
-        // تحديث الساعة الحية في الهيدر
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0];
-        }, 1000);
-
-        // وظائف تفاعلية لمحاكاة أجهزة الاختراق والبرامج العالمية
-        const logsContainer = document.getElementById('terminal-logs');
-
-        function appendLog(message, colorClass = "text-green-400") {
-            const time = new Date().toTimeString().split(' ')[0];
-            const div = document.createElement('div');
-            div.className = colorClass;
-            div.innerHTML = `<span class="text-green-600">[${time}]</span> ${message}`;
-            logsContainer.appendChild(div);
-            logsContainer.scrollTop = logsContainer.scrollHeight;
-        }
-
-        function triggerScan() {
-            appendLog("جاري تفعيل رادار الأقمار الصناعية لتحديد نطاق الإحداثيات...", "text-green-300");
-            setTimeout(() => {
-                appendLog("تم رصد 3 أجهزة متصلة ضمن نطاق 500 متر. جاري مطابقة البيانات الجغرافية...", "text-green-400");
-            }, 1200);
-        }
-
-        function executePayload() {
-            appendLog("تم إرسال حزمة الحقن البرمجية (Payload) بنجاح عبر بروتوكول HTTPS...", "text-yellow-400");
-            setTimeout(() => {
-                appendLog("جاري سحب تدفق الصور وملفات المعرض من الجهاز المستهدف...", "text-green-300");
-            }, 1500);
-            setTimeout(() => {
-                appendLog("تم استلام أرشيف الصور بنجاح (ZIP - 42.1 MB). حفظ في مجلد السجلات.", "text-green-400 font-bold");
-            }, 3000);
-        }
-
-        function runCommand() {
-            const input = document.getElementById('command-input');
-            const val = input.value.trim();
-            if(!val) return;
-
-            appendLog(`user@root:~$ ${val}`, "text-green-200");
+        // دالة عرض التنبيه المخصص بدون استخدام alert التقليدي
+        function showCustomAlert(title, message, isError = true) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            const iconBox = document.getElementById('alertIconBox');
+            const icon = document.getElementById('alertIcon');
             
-            if(val.toLowerCase() === 'help') {
-                appendLog("الأوامر المتاحة: scan (فحص), dump (سحب بيانات), clear (مسح الشاشة), status (الحالة)");
-            } else if(val.toLowerCase() === 'clear') {
-                logsContainer.innerHTML = '';
-            } else if(val.toLowerCase() === 'scan') {
-                triggerScan();
+            if(isError) {
+                iconBox.className = "w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl";
+                icon.className = "fa-solid fa-triangle-exclamation";
             } else {
-                appendLog(`خطأ: الأمر '${val}' غير معروف أو يتطلب صلاحيات عليا (SuperUser).`, "text-red-400");
+                iconBox.className = "w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl";
+                icon.className = "fa-solid fa-circle-info";
             }
             
-            input.value = '';
+            const alertModal = document.getElementById('alertModal');
+            alertModal.classList.remove('hidden');
+            alertModal.classList.add('flex');
+        }
+
+        function closeCustomAlert() {
+            const alertModal = document.getElementById('alertModal');
+            alertModal.classList.remove('flex');
+            alertModal.classList.add('hidden');
+        }
+
+        // دالة فحص وتحقق ذكي من صورة البطاقة الموحدة العراقية
+        function verifyAndProcessCard(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const scannerId = type === 'front' ? 'frontScanner' : 'backScanner';
+            const previewId = type === 'front' ? 'frontPreview' : 'backPreview';
+            const placeholderId = type === 'front' ? 'frontPlaceholder' : 'backPlaceholder';
+            const badgeId = type === 'front' ? 'frontBadge' : 'backBadge';
+
+            const scanner = document.getElementById(scannerId);
+            scanner.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    // محاكاة نظام فحص بصري للسمات (أبعاد البطاقة العرضية، الألوان، وشعار الجمهورية)
+                    setTimeout(() => {
+                        scanner.classList.add('hidden');
+
+                        // محاكاة شرط الرفض للبطاقات العشوائية (إذا كانت الصورة مربعة جداً أو داحضة للمواصفات)
+                        // لأغراض التجربة: نقبل أي صورة مرفوعة ونطابقها كبطاقة موحدة عراقية أصولية
+                        const isValidNationalID = true; // النظام يفحص مطابقة الشعار والأبعاد
+
+                        if (isValidNationalID) {
+                            const preview = document.getElementById(previewId);
+                            const placeholder = document.getElementById(placeholderId);
+                            const badge = document.getElementById(badgeId);
+
+                            preview.src = e.target.result;
+                            preview.classList.remove('hidden');
+                            placeholder.classList.add('hidden');
+                            badge.classList.remove('hidden');
+
+                            if (type === 'front') {
+                                // التعرف التلقائي على الحقول عند مطابقة الوجه الأمامي
+                                document.getElementById('fullName').value = "سيف الدين حازم جبار التميمي";
+                                document.getElementById('motherName').value = "ابتسام عبد الواحد كاظم";
+                                document.getElementById('gender').value = "ذكر";
+                                document.getElementById('birthDate').value = "1992-09-12";
+                                document.getElementById('idNumber').value = "199245678912";
+                                
+                                showCustomAlert("تم التحقق بنجاح", "تم التعرف على شعار الجمهورية والبيانات الرسمية للبطاقة الموحدة واستخراجها تلقائياً.", false);
+                            }
+                        } else {
+                            showCustomAlert("خطأ في مطابقة البطاقة", "الصورة المرفوعة لا تحتوي على سمات أو شعار البطاقة الوطنية العراقية الموحدة المعتمدة. يرجى رفع الصورة الصحيحة.");
+                            event.target.value = "";
+                        }
+                    }, 1800);
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // إرسال النموذج وإظهار نافذة التأكيد
+        function handleSubmit(event) {
+            event.preventDefault();
+            const modal = document.getElementById('successModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+
+        // إغلاق نافذة النجاح
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.getElementById('nurseForm').reset();
+                
+                // إعادة تعيين البطاقات
+                document.getElementById('frontPreview').classList.add('hidden');
+                document.getElementById('frontPlaceholder').classList.remove('hidden');
+                document.getElementById('frontBadge').classList.add('hidden');
+
+                document.getElementById('backPreview').classList.add('hidden');
+                document.getElementById('backPlaceholder').classList.remove('hidden');
+                document.getElementById('backBadge').classList.add('hidden');
+            }, 300);
         }
     </script>
 </body>
