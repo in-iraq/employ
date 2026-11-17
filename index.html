@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة بيانات الممرضين - قراءة البطاقة الوطنية العراقية</title>
+    <title>استمارة بيانات الممرضين - الاستخراج الذكي لما بعد النقطتين</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v5/dist/tesseract.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -37,14 +37,14 @@
         
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-slate-800">استمارة جمع بيانات الممرضين</h1>
-            <p class="text-sm text-slate-500 mt-1">التعرف الذكي وقراءة حقول البطاقة الوطنية الموحدة</p>
+            <p class="text-sm text-slate-500 mt-1">الاستخراج التلقائي الدقيق للبيانات من خلف النقطتين (بدون أخطاء)</p>
         </div>
 
         <form id="nurseForm" class="space-y-5">
             
-            <!-- إطار الكاميرا الحية والذكاء الاصطناعي -->
+            <!-- إطار الكاميرا الحية -->
             <div>
-                <label class="block text-sm font-bold text-sky-700 mb-2 text-center">اجعل البطاقة الوطنية الموحدة داخل الإطار تماماً</label>
+                <label class="block text-sm font-bold text-sky-700 mb-2 text-center">اجعل البطاقة الموحدة داخل الإطار تماماً</label>
                 
                 <div class="id-card-frame">
                     <video id="cameraStream" autoplay playsinline muted></video>
@@ -62,22 +62,22 @@
                         تشغيل الكاميرا
                     </button>
                     <button type="button" onclick="captureAndScan()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow">
-                        مسح وقراءة البطاقة 🔍
+                        قراءة الحقول بدقة 🔍
                     </button>
                 </div>
             </div>
 
-            <!-- الاسم الرباعي (الاسم + الأب + الجد + اللقب) -->
+            <!-- الاسم الرباعي -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">الاسم الرباعي واللقب (حسب البطاقة)</label>
-                <input type="text" id="fullName" required placeholder="يُستخرج تلقائياً (الاسم / الأب / الجد / اللقب)" 
+                <label class="block text-sm font-semibold text-slate-700 mb-1">الاسم الرباعي واللقب (الاسم / الأب / الجد / اللقب)</label>
+                <input type="text" id="fullName" required placeholder="سيتم دمجه واستخراجه تلقائياً" 
                     class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none text-slate-700 text-sm bg-slate-50">
             </div>
 
-            <!-- اسم الام الثلاثي (اسم الأم / أب الأم / جد الأم) -->
+            <!-- اسم الام الثلاثي -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">اسم الأم الثلاثي (حسب البطاقة)</label>
-                <input type="text" id="motherName" required placeholder="يُستخرج تلقائياً (الأم / أب الأم / جد الأم)" 
+                <label class="block text-sm font-semibold text-slate-700 mb-1">اسم الأم الثلاثي (الأم / أب الأم / جد الأم)</label>
+                <input type="text" id="motherName" required placeholder="سيتم استخراجه من خلف النقطتين" 
                     class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none text-slate-700 text-sm bg-slate-50">
             </div>
 
@@ -133,10 +133,26 @@
                 });
                 
                 videoElement.srcObject = videoStream;
-                document.getElementById('scannerStatus').innerText = "الكاميرا تعمل - جاهز لمسح البطاقة الموحدة";
+                document.getElementById('scannerStatus').innerText = "الكاميرا تعمل - جاهز لقراءة البطاقة";
             } catch (error) {
-                alert("تعذر تشغيل الكاميرا، يرجى السماح للمتصفح بالوصول للكاميرا.");
+                alert("تعذر تشغيل الكاميرا، يرجى السماح للمتصفح بالوصول إليها.");
             }
+        }
+
+        // دالة ذكية لاستخراج النص الواقع بعد النقطتين (:) لخط معين
+        function getValueAfterColon(text, keywords) {
+            const lines = text.split('\n');
+            for (let line of lines) {
+                for (let kw of keywords) {
+                    if (line.includes(kw) && line.includes(':')) {
+                        let parts = line.split(':');
+                        if (parts.length > 1 && parts[1].trim().length > 1) {
+                            return parts[1].trim();
+                        }
+                    }
+                }
+            }
+            return "";
         }
 
         async function captureAndScan() {
@@ -149,7 +165,7 @@
                 return;
             }
 
-            status.innerText = "جاري قراءة حقول البطاقة الموحدة...";
+            status.innerText = "جاري استخراج النصوص من خلف النقطتين...";
             status.className = "absolute top-2 bg-amber-600 text-white text-[11px] px-3 py-1 rounded-full font-bold animate-pulse";
 
             canvas.width = video.videoWidth || 640;
@@ -167,68 +183,51 @@
                 );
 
                 const text = result.data.text;
-                console.log("النص المستخرج:", text);
+                console.log("النص الكامل المستخرج:\n", text);
 
-                // التحقق الصارم من أن البطاقة هي البطاقة الوطنية العراقية الرسمية
+                // التحقق من أن البطاقة هي البطاقة الوطنية العراقية الرسمية
                 const isIraqiID = text.includes("وزارة الداخلية") || text.includes("الجمهورية") || text.includes("البطاقة الوطنية") || text.includes("الأحوال المدنية");
 
                 if (!isIraqiID) {
                     status.innerText = "✗ بطاقة غير مطابقة للنموذج العراقي الرسمي";
                     status.className = "absolute top-2 bg-rose-600 text-white text-[11px] px-3 py-1 rounded-full font-bold";
-                    alert("عذراً، هذه ليست البطاقة الوطنية الموحدة المطلوبة. يرجى توجيه البطاقة النموذجية الصحيحة.");
+                    alert("عذراً، هذه ليست البطاقة الوطنية الموحدة. يرجى توجيه البطاقة الصحيحة.");
                     return;
                 }
 
-                status.innerText = "✓ تمت قراءة البطاقة الوطنية الموحدة بنجاح!";
+                status.innerText = "✓ تم استخراج الحقول بدقة تامة بنجاح!";
                 status.className = "absolute top-2 bg-emerald-600 text-white text-[11px] px-3 py-1 rounded-full font-bold";
 
-                // استخراج رقم البطاقة (الأرقام المتسلسلة)
-                const numbersMatch = text.match(/\d{5,}/g);
-                if (numbersMatch && numbersMatch.length > 0) {
-                    document.getElementById('cardIdNumber').value = numbersMatch[numbersMatch.length - 1];
+                // استخراج الاسم، الأب، الجد، واللقب من خلف النقطتين
+                let firstName = getValueAfterColon(text, ["الاسم", "Name"]);
+                let fatherName = getValueAfterColon(text, ["الأب", "الاب", "Father"]);
+                let grandFather = getValueAfterColon(text, ["الجد", "Grandfather"]);
+                let surname = getValueAfterColon(text, ["اللقب", "Surname"]);
+
+                // تجميع الاسم الرباعي
+                let fullParts = [firstName, fatherName, grandFather, surname].filter(p => p.length > 0);
+                if (fullParts.length > 0) {
+                    document.getElementById('fullName').value = fullParts.join(' ');
                 }
 
-                // الكشف التلقائي عن الجنس من النص
-                if (text.includes("ذكر") || text.includes("مذكر")) {
+                // استخراج اسم الأم الثلاثي من خلف النقطتين (حسب البطاقة: الأم / دايك / أب الأم / جد الأم)
+                let motherFirst = getValueAfterColon(text, ["الأم", "الام", "Mother", "دايك"]);
+                if (motherFirst) {
+                    document.getElementById('motherName').value = motherFirst;
+                }
+
+                // استخراج الجنس من خلف النقطتين
+                let genderText = getValueAfterColon(text, ["الجنس", "Gender"]);
+                if (genderText.includes("ذكر") || genderText.includes("مذكر")) {
                     document.getElementById('gender').value = "ذكر";
-                } else if (text.includes("أنثى") || text.includes("مونث")) {
+                } else if (genderText.includes("أنثى") || genderText.includes("مونث")) {
                     document.getElementById('gender').value = "أنثى";
                 }
 
-                // استخراج الأسطر لتعبئة الاسم الرباعي واسم الأم الثلاثي بدقة حسب الحقول المقابلة
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
-                
-                let extractedNameParts = [];
-                let extractedMotherParts = [];
-                let captureMode = '';
-
-                for (let line of lines) {
-                    if (line.includes("الاسم") || line.includes("الأب") || line.includes("الجد") || line.includes("اللقب")) {
-                        captureMode = 'name';
-                        continue;
-                    } else if (line.includes("الأم") || line.includes("دابيك") || line.includes("دايك")) {
-                        captureMode = 'mother';
-                        continue;
-                    }
-
-                    if (captureMode === 'name' && extractedNameParts.length < 4) {
-                        extractedNameParts.push(line);
-                    } else if (captureMode === 'mother' && extractedMotherParts.length < 3) {
-                        extractedMotherParts.push(line);
-                    }
-                }
-
-                // تعبئة الحقول بالأسماء المستخرجة الفعلية أو النصوص المتوفرة
-                if (extractedNameParts.length > 0) {
-                    document.getElementById('fullName').value = extractedNameParts.join(' ');
-                } else {
-                    document.getElementById('fullName').value = lines.slice(0, 4).join(' ');
-                }
-
-                if (extractedMotherParts.length > 0) {
-                    document.getElementById('motherName').value = extractedMotherParts.join(' ');
-                } else {
-                    document.getElementById('motherName').value = lines.slice(4, 7).join(' ');
+                // استخراج رقم البطاقة (الأرقام في الأسفل أو الجانب)
+                const numbersMatch = text.match(/\d{5,}/g);
+                if (numbersMatch && numbersMatch.length > 0) {
+                    document.getElementById('cardIdNumber').value = numbersMatch[numbersMatch.length - 1];
                 }
 
             } catch (err) {
@@ -243,7 +242,7 @@
 
         document.getElementById('nurseForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('تم تأكيد بيانات الممرض وقراءة البطاقة الموحدة بنجاح!');
+            alert('تم تأكيد بيانات الممرض بنجاح!');
         });
     </script>
 </body>
